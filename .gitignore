@@ -1,0 +1,18 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+*.log
+*.log.gz
+*.tmp
+
+quora-api/target/
+quora-db/target/
+quora-service/target/
