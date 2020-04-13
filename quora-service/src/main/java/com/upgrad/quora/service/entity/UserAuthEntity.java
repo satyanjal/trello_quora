@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "user_auth", schema = "quora")
@@ -38,15 +38,15 @@ public class UserAuthEntity implements Serializable {
 
     @Column(name = "expires_at")
     @NotNull
-    private ZonedDateTime expiresAt;
+    private Date expiresAt;
 
     @Column(name = "login_at")
     @NotNull
-    private ZonedDateTime loginAt;
+    private Date loginAt;
 
     @Column(name = "logout_at")
     @NotNull
-    private ZonedDateTime logoutAt;
+    private Date logoutAt;
 
     public Integer getId() { return id; }
 
@@ -64,17 +64,17 @@ public class UserAuthEntity implements Serializable {
 
     public void setAccessToken(String accessToken) {this.accessToken = accessToken;}
 
-    public ZonedDateTime getExpiresAt() {return expiresAt;}
+    public Date getExpiresAt() {return expiresAt;}
 
-    public void setExpiresAt(ZonedDateTime expiresAt) {this.expiresAt = expiresAt;}
+    public void setExpiresAt(Date expiresAt) {this.expiresAt = expiresAt;}
 
-    public ZonedDateTime getLoginAt() {return loginAt;}
+    public Date getLoginAt() {return loginAt;}
 
-    public void setLoginAt(ZonedDateTime loginAt) {this.loginAt = loginAt;}
+    public void setLoginAt(Date loginAt) {this.loginAt = loginAt;}
 
-    public ZonedDateTime getLogoutAt() {return logoutAt;}
+    public Date getLogoutAt() {return logoutAt;}
 
-    public void setLogoutAt(ZonedDateTime logoutAt) {this.logoutAt = logoutAt;}
+    public void setLogoutAt(Date logoutAt) {this.logoutAt = logoutAt;}
 
     @Override
     public boolean equals(Object obj) {
