@@ -1,9 +1,6 @@
 package com.upgrad.quora.service.entity;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -42,7 +39,7 @@ public class UserEntity implements Serializable {
     @Column(name = "username")
     @NotNull
     @Size(max = 30)
-    private String userName;
+    private static String userName;
 
     @Column(name = "email")
     @NotNull
@@ -58,7 +55,7 @@ public class UserEntity implements Serializable {
     @Column(name = "salt")
     @NotNull
     @Size(max = 200)
-    //@ToStringExclude
+    @ToStringExclude
     private String salt;
 
     @Column(name = "country")
@@ -108,7 +105,7 @@ public class UserEntity implements Serializable {
 
     public void setLastName(String lastName) {this.lastName = lastName;}
 
-    public String getUserName() {return userName;}
+    public static String getUserName() {return userName;}
 
     public void setUserName(String userName) {this.userName = userName;}
 

@@ -14,6 +14,7 @@ import java.util.Date;
 @NamedQueries(
         {
 //                Enter you named queries like in UserEntity.java file
+                @NamedQuery(name = "userAuthTokenByAccessToken", query = "select ut from UserAuthEntity u where ut.accesstoken =:accesstoken")
         }
 )
 
@@ -30,7 +31,7 @@ public class UserAuthEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private static UserEntity user;
 
     @Column(name = "access_token")
     @Size(max = 500)
@@ -56,7 +57,7 @@ public class UserAuthEntity implements Serializable {
 
     public void setUuid(String uuid) {this.uuid = uuid;}
 
-    public UserEntity getUser() {return user;}
+    public static UserEntity getUser() {return user;}
 
     public void setUser(UserEntity user) {this.user = user;}
 
