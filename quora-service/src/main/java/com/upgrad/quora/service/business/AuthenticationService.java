@@ -3,7 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
-import com.upgrad.quora.service.exception.SignUpRestrictedException;
+import com.upgrad.quora.service.exception.AuthenticationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -21,44 +21,39 @@ public class AuthenticationService {
     private UserDao userDao;
 
     @Autowired
-    private PasswordCryptographyProvider CryptographyProvider;
+    private PasswordCryptographyProvider cryptographyProvider;
+
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public UserAuthEntity authenticate (final String user, final String email, final String password) throws SignUpRestrictedException {
-
-        UserEntity userentity = userDao.getUserByEmail(email);
-
-        if (user.equals(userentity.getUserName())){
-            throw new SignUpRestrictedException("SGR-001", "Try any other Username, this Username has already been taken");
+    public UserAuthEntity authenticate(final String username, final String password) throws AuthenticationFailedException {
+        UserEntity userEntity = userDao.getUserByEmail(username);
+        if (userEntity == null) {
+            throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
 
-        if(email.equals(userentity.getEmail())){
-            throw new SignUpRestrictedException("SGR-002", "This user has already been registered, try with any other emailId");
-        }
-
-        final String encryptedPassword = CryptographyProvider.encrypt(password, userentity.getSalt());
-        if (encryptedPassword.equals(userentity.getPassword())) {
+        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
+        if (encryptedPassword.equals(userEntity.getPassword())) {
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             UserAuthEntity userAuthTokenEntity = new UserAuthEntity();
-            userAuthTokenEntity.setUser(userentity);
+            userAuthTokenEntity.setUser(userEntity);
             final ZonedDateTime now = ZonedDateTime.now();
             final ZonedDateTime expires = now.plusHours(8);
             final Date issuedAt = new Date(now.getLong(ChronoField.INSTANT_SECONDS));
             final Date expiresAt = new Date(expires.getLong(ChronoField.INSTANT_SECONDS));
 
-            userAuthTokenEntity.setAccessToken(jwtTokenProvider.generateToken(userentity.getUuid(), now, expires));
+            userAuthTokenEntity.setAccessToken(jwtTokenProvider.generateToken(userEntity.getUuid(), now, expires));
 
             userAuthTokenEntity.setLoginAt(issuedAt);
             userAuthTokenEntity.setExpiresAt(expiresAt);
 
             userDao.createAuthToken(userAuthTokenEntity);
 
-            userDao.updateUser(userentity);
+            userDao.updateUser(userEntity);
             userAuthTokenEntity.setLoginAt(issuedAt);
             return userAuthTokenEntity;
         }
         else {
-            throw new SignUpRestrictedException("ATH-002", "Password failed");
+            throw new AuthenticationFailedException("ATH-002", "Password failed");
         }
     }
 }

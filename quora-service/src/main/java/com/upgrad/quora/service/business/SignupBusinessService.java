@@ -25,3 +25,10 @@ public class SignupBusinessService {
         return userDao.createUser(userEntity);
     }
 }
+//if (user.equals(userentity.getUserName())){
+//         throw new SignUpRestrictedException("SGR-001", "Try any other Username, this Username has already been taken");
+//         }
+
+//         if(email.equals(userentity.getEmail())){
+//         throw new SignUpRestrictedException("SGR-002", "This user has already been registered, try with any other emailId");
+//         }
