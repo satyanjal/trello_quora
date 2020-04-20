@@ -44,7 +44,7 @@ public class UserEntity implements Serializable {
     @Column(name = "email")
     @NotNull
     @Size(max = 50)
-    private String email;
+    private static String email;
 
     //@ToStringExclude
     @Column(name = "password")
@@ -109,7 +109,7 @@ public class UserEntity implements Serializable {
 
     public void setUserName(String userName) {this.userName = userName;}
 
-    public String getEmail() {return email;}
+    public static String getEmail() {return email;}
 
     public void setEmail(String email) {this.email = email;}
 
