@@ -88,7 +88,6 @@
                         <artifactId>swagger-annotations</artifactId>
                         <version>1.5.18</version>
                     </dependency>
-
                     <dependency>
                         <groupId>io.swagger</groupId>
                         <artifactId>swagger-codegen-generators</artifactId>
