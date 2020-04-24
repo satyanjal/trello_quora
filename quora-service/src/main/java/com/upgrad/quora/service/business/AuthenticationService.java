@@ -32,12 +32,14 @@ public class AuthenticationService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity signin(final String username, final String password) throws AuthenticationFailedException {
-        UserEntity userEntity = userDao.getUserByUserName(username);
+        UserEntity userEntity = userDao.getUserByUsername(username);
+//        System.out.println(userEntity.getUserName());
+//        System.out.println(username);
         if (userEntity == null) {
             throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
 
-        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
+        final String encryptedPassword = cryptographyProvider.encrypt(password, userEntity.getSalt());
         if (encryptedPassword.equals(userEntity.getPassword())) {
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             UserAuthEntity userAuthTokenEntity = new UserAuthEntity();
@@ -55,7 +57,7 @@ public class AuthenticationService {
             userAuthDao.createAuthToken(userAuthTokenEntity);
 
             userDao.updateUser(userEntity);
-            userAuthTokenEntity.setLoginAt(issuedAt);
+            //userAuthTokenEntity.setLoginAt(issuedAt);
             return userAuthTokenEntity;
         }
         else {

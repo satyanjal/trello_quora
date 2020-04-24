@@ -8,10 +8,11 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "users", schema = "quora")
+@Table(name = "users")
 @NamedQueries(
         {
-                @NamedQuery(name = "userByEmail", query = "select u from UserEntity u where u.email =:email")
+                @NamedQuery(name = "userByEmail", query = "select u from UserEntity u where u.email =:email"),
+                @NamedQuery(name = "userByUsername", query = "select u from UserEntity u where u.userName =:username")
         }
 )
 
@@ -39,12 +40,12 @@ public class UserEntity implements Serializable {
     @Column(name = "username")
     @NotNull
     @Size(max = 30)
-    private static String userName;
+    private String userName;
 
     @Column(name = "email")
     @NotNull
     @Size(max = 50)
-    private static String email;
+    private String email;
 
     //@ToStringExclude
     @Column(name = "password")
@@ -105,11 +106,11 @@ public class UserEntity implements Serializable {
 
     public void setLastName(String lastName) {this.lastName = lastName;}
 
-    public static String getUserName() {return userName;}
+    public String getUserName() {return userName;}
 
     public void setUserName(String userName) {this.userName = userName;}
 
-    public static String getEmail() {return email;}
+    public String getEmail() {return email;}
 
     public void setEmail(String email) {this.email = email;}
 

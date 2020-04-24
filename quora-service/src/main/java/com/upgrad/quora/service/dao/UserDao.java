@@ -20,18 +20,22 @@ public class UserDao {
 
     public UserEntity getUserByEmail(final String email) {
         try {
-            return entityManager.createNamedQuery("userByEmail", UserEntity.class).setParameter("email", email).getSingleResult();
+            return entityManager.createNamedQuery("userByEmail", UserEntity.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
     }
 
     /*This methods gets the user details based on the username passed.
-   * @param userName username of the user whose information is to be fetched.
+   * @param username username of the user whose information is to be fetched.
    * @return null if the user with given username doesn't exist in DB.*/
-    public UserEntity getUserByUserName(final String username) {
+    public UserEntity getUserByUsername(final String username) {
         try {
-            return entityManager.createNamedQuery("userByUsername", UserEntity.class).setParameter("username", username).getSingleResult();
+            return entityManager.createNamedQuery("userByUsername", UserEntity.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }

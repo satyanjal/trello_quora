@@ -4,6 +4,7 @@ import com.upgrad.quora.service.entity.UserAuthEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 @Repository
@@ -16,9 +17,13 @@ public class UserAuthDao {
     @return A single user auth object or null*/
 
     public UserAuthEntity getUserAuthByToken(final String accesstoken){
-        return entityManager.createNamedQuery("userAuthByAccessToken", UserAuthEntity.class)
-                .setParameter("accessToken", accesstoken)
-                .getSingleResult();
+        try {
+            return entityManager.createNamedQuery("userAuthByAccessToken", UserAuthEntity.class)
+                    .setParameter("accesstoken", accesstoken)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
 
     /* Keeping all the authentication logic separate here from User logic */

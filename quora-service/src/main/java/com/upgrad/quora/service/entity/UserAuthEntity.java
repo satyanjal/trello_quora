@@ -10,11 +10,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "user_auth", schema = "quora")
+@Table(name = "user_auth")
 @NamedQueries(
         {
 //                Enter you named queries like in UserEntity.java file
-                @NamedQuery(name = "userAuthTokenByAccessToken", query = "select ut from UserAuthEntity u where ut.accesstoken =:accesstoken")
+                @NamedQuery(name = "userAuthByAccessToken", query = "select u from UserAuthEntity u where u.accessToken =:accesstoken")
         }
 )
 
@@ -31,7 +31,7 @@ public class UserAuthEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private static UserEntity user;
+    private UserEntity user;
 
     @Column(name = "access_token")
     @Size(max = 500)
@@ -57,7 +57,7 @@ public class UserAuthEntity implements Serializable {
 
     public void setUuid(String uuid) {this.uuid = uuid;}
 
-    public static UserEntity getUser() {return user;}
+    public UserEntity getUser() {return user;}
 
     public void setUser(UserEntity user) {this.user = user;}
 
