@@ -10,7 +10,7 @@ import java.util.Date;
 @Table(name = "question", schema = "quora")
 @NamedQueries(
         {
-//                Enter you named queries like in UserEntity.java file
+            @NamedQuery(name = "questionByUuid", query = "select q from QuestionEntity q where q.uuid = :uuid"),
         }
 )
 
