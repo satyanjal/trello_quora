@@ -34,4 +34,14 @@ public class QuestionDao {
         } catch (NoResultException nre) {return null;}
     }
 
+    public void deleteQuestion(QuestionEntity deleteQuestion) {
+        entityManager.remove(deleteQuestion);
+    }
+
+    public List<QuestionEntity> getAllQuestionsByUser(final String userUuid) {
+        TypedQuery<QuestionEntity> query = entityManager.
+                createNamedQuery("questionsByUser", QuestionEntity.class).setParameter("user_id", userUuid);
+        return query.getResultList();
+    }
+
 }
