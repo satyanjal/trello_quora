@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 
 @Service
@@ -33,8 +33,6 @@ public class AuthenticationService {
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity signin(final String username, final String password) throws AuthenticationFailedException {
         UserEntity userEntity = userDao.getUserByUsername(username);
-//        System.out.println(userEntity.getUserName());
-//        System.out.println(username);
         if (userEntity == null) {
             throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
@@ -44,25 +42,28 @@ public class AuthenticationService {
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             UserAuthEntity userAuthTokenEntity = new UserAuthEntity();
             userAuthTokenEntity.setUser(userEntity);
-            final ZonedDateTime now = ZonedDateTime.now();
-            final ZonedDateTime expires = now.plusHours(8);
-            final Date issuedAt = new Date(now.getLong(ChronoField.INSTANT_SECONDS));
-            final Date expiresAt = new Date(expires.getLong(ChronoField.INSTANT_SECONDS));
+            userAuthTokenEntity.setUuid(UUID.randomUUID().toString());
+            final Date now = new Date();
+            final Date expiresAt = this.addHoursToJavaUtilDate(now, 8);
 
-            userAuthTokenEntity.setAccessToken(jwtTokenProvider.generateToken(userEntity.getUuid(), now, expires));
-
-            userAuthTokenEntity.setLoginAt(issuedAt);
+            userAuthTokenEntity.setAccessToken(jwtTokenProvider.generateToken(userEntity.getUuid(), now, expiresAt));
+            userAuthTokenEntity.setLoginAt(now);
             userAuthTokenEntity.setExpiresAt(expiresAt);
 
             userAuthDao.createAuthToken(userAuthTokenEntity);
 
-            userDao.updateUser(userEntity);
-            //userAuthTokenEntity.setLoginAt(issuedAt);
             return userAuthTokenEntity;
         }
         else {
             throw new AuthenticationFailedException("ATH-002", "Password failed");
         }
+    }
+
+    private Date addHoursToJavaUtilDate(Date date, int hours) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        return calendar.getTime();
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
