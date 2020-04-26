@@ -29,8 +29,9 @@ public class UserDao {
     }
 
     /*This methods gets the user details based on the username passed.
-   * @param username username of the user whose information is to be fetched.
-   * @return null if the user with given username doesn't exist in DB.*/
+     * @param username username of the user whose information is to be fetched.
+     * @return null if the user with given username doesn't exist in DB.*/
+
     public UserEntity getUserByUsername(final String username) {
         try {
             return entityManager.createNamedQuery("userByUsername", UserEntity.class)
@@ -49,5 +50,35 @@ public class UserDao {
 
     public void updateUser(final UserEntity updatedUserEntity) {
         entityManager.merge(updatedUserEntity);
+    }
+
+    /**
+     * Fetch a single user by given id from the DB.
+     *
+     * @param userId Id of the user whose information is to be fetched.
+     * @return User details if exist in the DB else null.
+     */
+    public UserEntity getUserById(final String userId) {
+        try {
+            return entityManager
+                    .createNamedQuery("userByUserId", UserEntity.class)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    /**
+     * Delete a user by given id from the DB.
+     * @param userId Id of the user whose information is to be fetched.
+     * @return User details which is to be deleted if exist in the DB else null.
+     */
+    public UserEntity deleteUser(final String userId) {
+        UserEntity deleteUser = getUserById(userId);
+        if (deleteUser != null) {
+            this.entityManager.remove(deleteUser);
+        }
+        return deleteUser;
     }
 }
