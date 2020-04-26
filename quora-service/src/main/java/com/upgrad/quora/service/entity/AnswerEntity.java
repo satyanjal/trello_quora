@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
-@Table(name = "answer", schema = "quora")
+@Table(name = "answer")
 
 public class AnswerEntity {
 
