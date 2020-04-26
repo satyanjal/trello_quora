@@ -7,7 +7,11 @@ import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class AdminService {
 
     @Autowired
@@ -16,7 +20,8 @@ public class AdminService {
     @Autowired
     private UserAuthDao userAuthDao;
 
-    public UserEntity deleteuser(final String userId,final String accesstoken) throws AuthorizationFailedException, UserNotFoundException {
+    @Transactional(propagation = Propagation.REQUIRED)
+    public UserEntity deleteuser(final String userId, final String accesstoken) throws AuthorizationFailedException, UserNotFoundException {
         UserAuthEntity userAuthEntity = this.userAuthDao.getUserAuthByToken(accesstoken);
 
         if (userAuthEntity == null) {
