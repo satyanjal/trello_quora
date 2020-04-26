@@ -31,6 +31,7 @@ public class UserDao {
     /*This methods gets the user details based on the username passed.
      * @param username username of the user whose information is to be fetched.
      * @return null if the user with given username doesn't exist in DB.*/
+
     public UserEntity getUserByUsername(final String username) {
         try {
             return entityManager.createNamedQuery("userByUsername", UserEntity.class)

@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 
 @Repository
 public class UserAuthDao {
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -45,4 +46,3 @@ public class UserAuthDao {
         entityManager.merge(updatedUserAuthEntity);
     }
 }
-
