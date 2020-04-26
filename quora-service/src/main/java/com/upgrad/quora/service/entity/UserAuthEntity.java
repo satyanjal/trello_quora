@@ -14,6 +14,7 @@ import java.util.Date;
 @NamedQueries(
         {
 //                Enter you named queries like in UserEntity.java file
+                @NamedQuery(name = "userAuthByAccessToken", query = "select u from UserAuthEntity u where u.accessToken =:accesstoken")
         }
 )
 
