@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "user_auth")
+@Table(name = "user_auth", schema = "public")
 @NamedQueries(
         {
 //                Enter you named queries like in UserEntity.java file
