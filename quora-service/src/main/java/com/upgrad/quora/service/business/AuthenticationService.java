@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 
 @Service
@@ -41,7 +42,7 @@ public class AuthenticationService {
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             UserAuthEntity userAuthTokenEntity = new UserAuthEntity();
             userAuthTokenEntity.setUser(userEntity);
-
+            userAuthTokenEntity.setUuid(UUID.randomUUID().toString());
             final Date now = new Date();
             final Date expiresAt = this.addHoursToJavaUtilDate(now, 8);
 
