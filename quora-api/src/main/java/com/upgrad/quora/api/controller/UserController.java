@@ -98,16 +98,10 @@ public class UserController {
      * @return UUID of the user who is signed out.
      * @throws SignOutRestrictedException if the user is not signed in the application and tries to signout of the application
      */
-    @RequestMapping(
-            method = RequestMethod.POST,
-            path = "/user/signout",
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SignoutResponse> signout(
-            @RequestHeader("authorization") final String accessToken) throws SignOutRestrictedException {
-        UserEntity userEntity;
-        userEntity = authenticationService.signout(accessToken);
-        SignoutResponse signoutResponse =
-                new SignoutResponse().id(userEntity.getUuid()).message("SIGNED OUT SUCCESSFULLY");
+    @RequestMapping(method = RequestMethod.POST, path = "/user/signout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<SignoutResponse> signout(@RequestHeader("authorization") final String accessToken) throws SignOutRestrictedException {
+        UserEntity userEntity = authenticationService.signout(accessToken);
+        SignoutResponse signoutResponse = new SignoutResponse().id(userEntity.getUuid()).message("SIGNED OUT SUCCESSFULLY");
         return new ResponseEntity<SignoutResponse>(signoutResponse, HttpStatus.OK);
     }
 }
