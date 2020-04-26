@@ -10,8 +10,8 @@ import java.util.Date;
 @Table(name = "question", schema = "quora")
 @NamedQueries(
         {
-            @NamedQuery(name = "questionByUuid", query = "select q from QuestionEntity q where q.uuid = :uuid"),
-            @NamedQuery(name = "questionsByUser", query = "select q from QuestionEntity q where q.user = :user"),
+            @NamedQuery(name = "questionByUuid", query = "select q from 'quora'.QuestionEntity q where q.uuid = :uuid"),
+            @NamedQuery(name = "questionsByUser", query = "select q from 'quora'.QuestionEntity q where q.user = :user"),
         }
 )
 
