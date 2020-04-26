@@ -1,3 +1,6 @@
+--creating schema quora for accessing database
+CREATE SCHEMA IF NOT EXISTS quora;
+COMMIT;
 
 --USERS table is created to store the details of all the users
 DROP TABLE IF EXISTS USERS CASCADE;
