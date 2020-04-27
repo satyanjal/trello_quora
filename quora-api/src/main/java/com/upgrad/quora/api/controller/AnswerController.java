@@ -54,6 +54,17 @@ public class AnswerController {
         return new ResponseEntity<AnswerEditResponse>(answerEditResponse, HttpStatus.OK);
     }
 
+    //3rd API
+    @RequestMapping(method = RequestMethod.DELETE, path = "/answer/delete/{answerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AnswerDeleteResponse> deleteAnswer(@PathVariable("answerId") final String answerUuid,
+                                                                 @RequestHeader("authorization") final String authorization)
+            throws AuthorizationFailedException, AnswerNotFoundException {
+
+        answerService.deleteAnswer(answerUuid, authorization);
+        AnswerDeleteResponse answerDeleteResponse = new AnswerDeleteResponse().id(answerUuid).status("ANSWER DELETED");
+        return new ResponseEntity<AnswerDeleteResponse>(answerDeleteResponse, HttpStatus.OK);
+    }
+
 
     //4th API
 

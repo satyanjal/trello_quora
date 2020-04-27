@@ -73,7 +73,23 @@ public class AnswerService {
         answerClassDao.updateAnswers(answerEntity);
     }
 
-
+    //API 3
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteAnswer(String answerUuid, final String authorizationToken)
+            throws AuthorizationFailedException, AnswerNotFoundException {
+        UserAuthEntity userAuthEntity = userAuthDao.getUserAuthByToken(authorizationToken);
+        AnswerEntity answerEntity = answerClassDao.getAnswerByUuid(answerUuid);
+        if (userAuthEntity == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        } else if (userAuthEntity.getLogoutAt() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to edit the answer");
+        } else if (answerEntity == null) {
+            throw new AnswerNotFoundException("ANS-001", "Entered answer uuid does not exist");
+        } else if (!userAuthEntity.getUser().getId().equals(answerEntity.getUser().getId()) || userAuthEntity.getUser().getRole() != "admin") {
+            throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
+        }
+        answerClassDao.deleteAnswer(answerEntity);
+    }
 
 
     //API 4
