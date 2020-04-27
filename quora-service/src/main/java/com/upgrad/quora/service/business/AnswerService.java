@@ -85,7 +85,7 @@ public class AnswerService {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to edit the answer");
         } else if (answerEntity == null) {
             throw new AnswerNotFoundException("ANS-001", "Entered answer uuid does not exist");
-        } else if (!userAuthEntity.getUser().getId().equals(answerEntity.getUser().getId()) || userAuthEntity.getUser().getRole() != "admin") {
+        } else if (!userAuthEntity.getUser().getId().equals(answerEntity.getUser().getId()) && userAuthEntity.getUser().getRole() != "admin") {
             throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
         }
         answerClassDao.deleteAnswer(answerEntity);
