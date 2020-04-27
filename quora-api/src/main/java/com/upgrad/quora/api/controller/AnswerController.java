@@ -1,17 +1,20 @@
 package com.upgrad.quora.api.controller;
 
-import com.upgrad.quora.api.model.AnswerDetailsResponse;
+import com.upgrad.quora.api.model.*;
 import com.upgrad.quora.service.business.AnswerService;
+import com.upgrad.quora.service.business.QuestionService;
+import com.upgrad.quora.service.entity.AnswerEntity;
+import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class AnswerController {
@@ -19,6 +22,30 @@ public class AnswerController {
     @Autowired
     private AnswerService answerService;
 
+    @Autowired
+    private QuestionService questionService;
+
+
+
+    // 1st API /question/{questionId}/answer/create
+
+    @RequestMapping(method = RequestMethod.POST, path = "/question/{questionId}/answer/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AnswerResponse> createAnswer(@PathVariable("questionId") final String questionUuid, final AnswerRequest answerRequest,
+                                                       @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
+
+        QuestionEntity questionEntity = questionService.getQuestionByUuId(questionUuid);
+        AnswerEntity answerEntity = new AnswerEntity();
+
+
+        answerEntity.setQuestion(questionEntity);
+        answerEntity.setAns(answerRequest.getAnswer());
+        answerEntity.setDate(new Date());
+        answerEntity.setUuid(UUID.randomUUID().toString());
+        final AnswerEntity createdAnswer = answerService.createAnswer(answerEntity, authorization);
+        final AnswerResponse answerResponse = new AnswerResponse().id(createdAnswer.getId().toString()).status("QUESTION CREATED");
+        return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
+    }
+    //4th API
 
     @RequestMapping( method = RequestMethod.GET, path = "/answer/all/{questionId}")
     public ResponseEntity<List<AnswerDetailsResponse>> allAnswers(@PathVariable("questionId") final String questionUuid,

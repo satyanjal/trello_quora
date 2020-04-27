@@ -102,4 +102,9 @@ public class QuestionService {
         return questionDao.getAllQuestionsByUser(userUuid);
     }
 
+    public QuestionEntity getQuestionByUuId(String questionUuId){
+        return questionDao.getQuestionByUuid(questionUuId);
+    }
+
+
 }
