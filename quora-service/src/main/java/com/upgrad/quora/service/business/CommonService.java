@@ -31,12 +31,12 @@ public class CommonService {
      */
     public UserEntity userProfile(String accessToken, String userId) throws AuthorizationFailedException, UserNotFoundException {
 
-        UserAuthEntity userAuthTokenEntity= userAuthDao.getUserAuthByToken((accessToken));
-        if(userAuthTokenEntity==null) {
+        UserAuthEntity userAuthEntity= userAuthDao.getUserAuthByToken((accessToken));
+        if(userAuthEntity==null) {
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         }
 
-        if(userAuthTokenEntity.getLogoutAt()!=null && userAuthTokenEntity.getExpiresAt().before(new Date())) {
+        if(userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
         }
 
