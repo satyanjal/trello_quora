@@ -5,6 +5,7 @@ import com.upgrad.quora.service.business.AnswerService;
 import com.upgrad.quora.service.business.QuestionService;
 import com.upgrad.quora.service.entity.AnswerEntity;
 import com.upgrad.quora.service.entity.QuestionEntity;
+import com.upgrad.quora.service.exception.AnswerNotFoundException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.mockito.stubbing.Answer;
@@ -31,20 +32,29 @@ public class AnswerController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/question/{questionId}/answer/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<AnswerResponse> createAnswer(@PathVariable("questionId") final String questionUuid, final AnswerRequest answerRequest,
-                                                       @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
+                                                       @RequestHeader("authorization") final String authorization) throws InvalidQuestionException, AuthorizationFailedException {
 
-        QuestionEntity questionEntity = questionService.getQuestionByUuId(questionUuid);
         AnswerEntity answerEntity = new AnswerEntity();
-
-
-        answerEntity.setQuestion(questionEntity);
         answerEntity.setAns(answerRequest.getAnswer());
         answerEntity.setDate(new Date());
         answerEntity.setUuid(UUID.randomUUID().toString());
-        final AnswerEntity createdAnswer = answerService.createAnswer(answerEntity, authorization);
+        final AnswerEntity createdAnswer = answerService.createAnswer(answerEntity, authorization, questionUuid);
         final AnswerResponse answerResponse = new AnswerResponse().id(createdAnswer.getId().toString()).status("QUESTION CREATED");
         return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
     }
+
+    //2nd API
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/answer/edit/{answerId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AnswerEditResponse> editAnswer(@PathVariable("answerId") final String answerUuid, final AnswerEditRequest answerEditRequest,
+                                                         @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, AnswerNotFoundException {
+        String content = answerEditRequest.getContent();
+        answerService.editAnswer(content, answerUuid, authorization);
+        AnswerEditResponse answerEditResponse = new AnswerEditResponse().id(answerUuid).status("ANSWER EDITED");
+        return new ResponseEntity<AnswerEditResponse>(answerEditResponse, HttpStatus.OK);
+    }
+
+
     //4th API
 
     @RequestMapping( method = RequestMethod.GET, path = "/answer/all/{questionId}")
