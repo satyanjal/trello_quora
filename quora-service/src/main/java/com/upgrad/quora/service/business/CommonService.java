@@ -9,8 +9,6 @@ import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Service
 public class CommonService {
 
@@ -36,7 +34,7 @@ public class CommonService {
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         }
 
-        if(userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
+        if(userAuthEntity.getLogoutAt()!=null) {
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
         }
 
