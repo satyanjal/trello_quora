@@ -46,7 +46,6 @@ public class UserAuthEntity implements Serializable {
     private Date loginAt;
 
     @Column(name = "logout_at")
-    @NotNull
     private Date logoutAt;
 
     public Integer getId() { return id; }

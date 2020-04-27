@@ -5,8 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.upgrad.quora.service.common.GenericErrorCode;
 import com.upgrad.quora.service.common.UnexpectedException;
 
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.UUID;
 
@@ -40,15 +38,12 @@ public class JwtTokenProvider {
      * @param expiresDateTime - expiry time of the JWT token
      * @return - generated JWT token
      */
-    public String generateToken(final String userUuid, final ZonedDateTime issuedDateTime, final ZonedDateTime expiresDateTime) {
-
-        final Date issuedAt = new Date(issuedDateTime.getLong(ChronoField.INSTANT_SECONDS));
-        final Date expiresAt = new Date(expiresDateTime.getLong(ChronoField.INSTANT_SECONDS));
+    public String generateToken(final String userUuid, final Date issuedDateTime, final Date expiresDateTime) {
 
         return JWT.create().withIssuer(TOKEN_ISSUER) //
                 .withKeyId(UUID.randomUUID().toString())
                 .withAudience(userUuid) //
-                .withIssuedAt(issuedAt).withExpiresAt(expiresAt).sign(algorithm);
+                .withIssuedAt(issuedDateTime).withExpiresAt(expiresDateTime).sign(algorithm);
     }
 
 }
