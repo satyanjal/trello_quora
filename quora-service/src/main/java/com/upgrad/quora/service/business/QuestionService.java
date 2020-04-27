@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,7 +35,7 @@ public class QuestionService {
         UserAuthEntity userAuthEntity = userAuthDao.getUserAuthByToken(authorizationToken);
         if (userAuthEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        } else if (userAuthEntity.getLogoutAt() != null) {
+        } else if (userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to post a question");
         }
         questionEntity.setUser(userAuthEntity.getUser());
@@ -46,7 +47,7 @@ public class QuestionService {
         UserAuthEntity userAuthEntity = userAuthDao.getUserAuthByToken(authorizationToken);
         if (userAuthEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        } else if (userAuthEntity.getLogoutAt() != null) {
+        } else if (userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to post a question");
         }
         return questionDao.getAllQuestions();
@@ -59,7 +60,7 @@ public class QuestionService {
         QuestionEntity questionEntity = questionDao.getQuestionByUuid(questionUuid);
         if (userAuthEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        } else if (userAuthEntity.getLogoutAt() != null) {
+        } else if (userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to edit the question");
         } else if (questionEntity == null) {
             throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
@@ -77,7 +78,7 @@ public class QuestionService {
         QuestionEntity questionEntity = questionDao.getQuestionByUuid(questionUuid);
         if (userAuthEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        } else if (userAuthEntity.getLogoutAt() != null) {
+        } else if (userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to delete the question");
         } else if (questionEntity == null) {
             throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
@@ -94,7 +95,7 @@ public class QuestionService {
         UserEntity userEntity = userDao.getUserById(userUuid);
         if (userAuthEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        } else if (userAuthEntity.getLogoutAt() != null) {
+        } else if (userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions");
         } else if (userEntity == null) {
             throw new UserNotFoundException("USR-001","User with entered uuid whose question details are to be seen does not exist");

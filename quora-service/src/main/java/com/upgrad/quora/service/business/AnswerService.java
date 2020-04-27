@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -39,7 +40,7 @@ public class AnswerService {
         UserAuthEntity userAuthEntity = userAuthDao.getUserAuthByToken(authorizationToken);
         if (userAuthEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        } else if (userAuthEntity.getLogoutAt() != null) {
+        } else if (userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to post a question");
         }
         answerEntity.setUser(userAuthEntity.getUser());
@@ -56,7 +57,7 @@ public class AnswerService {
         UserAuthEntity userAuthEntity = userAuthDao.getUserAuthByToken(authorizationToken);
         if (userAuthEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        } else if (userAuthEntity.getLogoutAt() != null) {
+        } else if (userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to edit the question");
         }
 

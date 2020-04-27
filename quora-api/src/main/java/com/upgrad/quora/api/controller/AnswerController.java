@@ -1,13 +1,14 @@
 package com.upgrad.quora.api.controller;
 
-import com.upgrad.quora.api.model.*;
+import com.upgrad.quora.api.model.AnswerDetailsResponse;
+import com.upgrad.quora.api.model.AnswerRequest;
+import com.upgrad.quora.api.model.AnswerResponse;
 import com.upgrad.quora.service.business.AnswerService;
 import com.upgrad.quora.service.business.QuestionService;
 import com.upgrad.quora.service.entity.AnswerEntity;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,7 +43,7 @@ public class AnswerController {
         answerEntity.setDate(new Date());
         answerEntity.setUuid(UUID.randomUUID().toString());
         final AnswerEntity createdAnswer = answerService.createAnswer(answerEntity, authorization);
-        final AnswerResponse answerResponse = new AnswerResponse().id(createdAnswer.getId().toString()).status("QUESTION CREATED");
+        final AnswerResponse answerResponse = new AnswerResponse().id(createdAnswer.getId().toString()).status("ANSWER CREATED");
         return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
     }
     //4th API
