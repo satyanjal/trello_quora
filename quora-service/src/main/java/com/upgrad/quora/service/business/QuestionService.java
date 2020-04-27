@@ -99,7 +99,7 @@ public class QuestionService {
         } else if (userEntity == null) {
             throw new UserNotFoundException("USR-001","User with entered uuid whose question details are to be seen does not exist");
         }
-        return questionDao.getAllQuestionsByUser(userUuid);
+        return questionDao.getAllQuestionsByUser(userEntity);
     }
 
     public QuestionEntity getQuestionByUuId(String questionUuId){
