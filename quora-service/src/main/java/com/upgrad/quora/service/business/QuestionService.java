@@ -78,7 +78,7 @@ public class QuestionService {
         if (userAuthEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
         } else if (userAuthEntity.getLogoutAt() != null) {
-            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to edit the question");
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to delete the question");
         } else if (questionEntity == null) {
             throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
         } else if (!userAuthEntity.getUser().getId().equals(questionEntity.getUser().getId())) {
