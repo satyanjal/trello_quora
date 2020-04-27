@@ -66,7 +66,8 @@ public class QuestionService {
         QuestionEntity questionEntity = questionDao.getQuestionByUuid(questionUuid);
         if (questionEntity == null) {
             throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
-        } else if (!userAuthEntity.getUser().getId().equals(questionEntity.getUser().getId())) {
+        } else if (!userAuthEntity.getUser().getId().equals(questionEntity.getUser().getId()) ||
+                !userAuthEntity.getUser().getRole().equalsIgnoreCase("admin")) {
             throw new AuthorizationFailedException("ATHR-003", "Only the question owner can edit the question");
         }
 
@@ -87,7 +88,8 @@ public class QuestionService {
         QuestionEntity questionEntity = questionDao.getQuestionByUuid(questionUuid);
         if (questionEntity == null) {
             throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
-        } else if (!userAuthEntity.getUser().getId().equals(questionEntity.getUser().getId())) {
+        } else if (!userAuthEntity.getUser().getId().equals(questionEntity.getUser().getId()) ||
+        !userAuthEntity.getUser().getRole().equalsIgnoreCase("admin")) {
             throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
         }
         questionDao.deleteQuestion(questionEntity);
