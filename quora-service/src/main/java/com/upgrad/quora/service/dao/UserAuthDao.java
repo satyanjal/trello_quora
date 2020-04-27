@@ -33,7 +33,7 @@ public class UserAuthDao {
      * @param userAuthEntity to be persisted in the DB.
      * @return Persisted UserAuthEntity object
      */
-    public UserAuthEntity createAuthToken(final UserAuthEntity userAuthEntity) {
+    public UserAuthEntity createAuthToken(UserAuthEntity userAuthEntity) {
         entityManager.persist(userAuthEntity);
         return userAuthEntity;
     }

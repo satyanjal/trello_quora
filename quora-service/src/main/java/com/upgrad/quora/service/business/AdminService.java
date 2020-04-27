@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
 public class AdminService {
 
@@ -28,7 +30,7 @@ public class AdminService {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
         }
 
-        if (userAuthEntity.getLogoutAt() != null) {
+        if (userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out");
         }
 

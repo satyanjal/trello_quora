@@ -75,9 +75,10 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST, path = "/user/signin", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SigninResponse> signin(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
 
-        byte[] decode = Base64.getDecoder().decode(authorization);
+
+
+        byte[] decode = Base64.getDecoder().decode(authorization.split("Basic ")[1]);
         String decodedText = new String(decode);
-        decodedText = decodedText.split("Basic ")[1];
         String[] decodedArray = decodedText.split(":");
 
         UserAuthEntity userAuthToken = authenticationService.signin(decodedArray[0],decodedArray[1]);
@@ -97,16 +98,10 @@ public class UserController {
      * @return UUID of the user who is signed out.
      * @throws SignOutRestrictedException if the user is not signed in the application and tries to signout of the application
      */
-    @RequestMapping(
-            method = RequestMethod.POST,
-            path = "/user/signout",
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SignoutResponse> signout(
-            @RequestHeader("authorization") final String accessToken) throws SignOutRestrictedException {
-        UserEntity userEntity;
-        userEntity = authenticationService.signout(accessToken);
-        SignoutResponse signoutResponse =
-                new SignoutResponse().id(userEntity.getUuid()).message("SIGNED OUT SUCCESSFULLY");
+    @RequestMapping(method = RequestMethod.POST, path = "/user/signout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<SignoutResponse> signout(@RequestHeader("authorization") final String accessToken) throws SignOutRestrictedException {
+        UserEntity userEntity = authenticationService.signout(accessToken);
+        SignoutResponse signoutResponse = new SignoutResponse().id(userEntity.getUuid()).message("SIGNED OUT SUCCESSFULLY");
         return new ResponseEntity<SignoutResponse>(signoutResponse, HttpStatus.OK);
     }
 }

@@ -1,15 +1,15 @@
 package com.upgrad.quora.service.business;
 
+import com.upgrad.quora.service.dao.UserAuthDao;
 import com.upgrad.quora.service.dao.UserDao;
+import com.upgrad.quora.service.entity.UserAuthEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.upgrad.quora.service.entity.UserAuthDao;
-import com.upgrad.quora.service.entity.UserAuthTokenEntity;
-import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Service
 public class CommonService {
@@ -31,13 +31,12 @@ public class CommonService {
      */
     public UserEntity userProfile(String accessToken, String userId) throws AuthorizationFailedException, UserNotFoundException {
 
-        UserAuthTokenEntity userAuthTokenEntity= userAuthDao.getUserAuthByToken((accessToken));
-        if(userAuthTokenEntity==null) {
+        UserAuthEntity userAuthEntity= userAuthDao.getUserAuthByToken((accessToken));
+        if(userAuthEntity==null) {
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         }
 
-        final ZonedDateTime now = ZonedDateTime.now();
-        if(userAuthTokenEntity.getLogoutAt()!=null && userAuthTokenEntity.getLogoutAt().isBefore(now)) {
+        if(userAuthEntity.getLogoutAt()!=null || userAuthEntity.getExpiresAt().before(new Date())) {
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
         }
 

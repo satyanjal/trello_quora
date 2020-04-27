@@ -8,13 +8,18 @@ import java.util.Date;
 
 @Entity
 @Table(name = "answer")
+@NamedQueries(
+        {
+                @NamedQuery(name = "answerByUuid", query = "select a from AnswerEntity a where a.uuid = :uuid")
+        }
+)
 
 public class AnswerEntity {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "uuid")
     @Size(max = 200)
@@ -36,11 +41,11 @@ public class AnswerEntity {
     @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
